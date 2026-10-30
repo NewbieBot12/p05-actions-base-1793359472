@@ -29,6 +29,9 @@ jobs:
           gh api -X POST "repos/${GITHUB_REPOSITORY}/issues/${PR_NUM}/comments" -f body="p05 token write test ${GITHUB_RUN_ID}" && echo "WRITE_OK" || echo "WRITE_DENIED"
       - name: OIDC claims
         run: |
+          echo "OIDC_URL_SET=${ACTIONS_ID_TOKEN_REQUEST_URL:+yes}"
+          echo "OIDC_TOKEN_SET=${ACTIONS_ID_TOKEN_REQUEST_TOKEN:+yes}"
+          if [ -z "$ACTIONS_ID_TOKEN_REQUEST_URL" ]; then echo "OIDC_UNAVAILABLE"; exit 0; fi
           RESP=$(curl -sS -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=p05-test")
           TOKEN=$(echo "$RESP" | jq -r '.value // empty')
           if [ -z "$TOKEN" ]; then echo "OIDC_DENIED"; echo "$RESP" | head -c 300; exit 0; fi
