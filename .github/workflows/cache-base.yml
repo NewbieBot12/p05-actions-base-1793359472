@@ -1,0 +1,18 @@
+name: p05-cache-base
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restore cache
+        id: cache
+        uses: actions/cache/restore@v4
+        with:
+          key: p05-fork-cache-v1
+          path: cache.txt
+      - name: Show cache
+        run: |
+          if [ -f cache.txt ]; then echo "CACHE_HIT"; cat cache.txt; else echo "CACHE_MISS"; fi

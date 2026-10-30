@@ -1,0 +1,17 @@
+name: p05-cache-pr
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+permissions:
+  contents: read
+jobs:
+  save:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create cache file
+        run: echo "FORK_CACHE_CONTENT_${GITHUB_RUN_ID}" > cache.txt
+      - name: Save cache
+        uses: actions/cache/save@v4
+        with:
+          key: p05-fork-cache-v1
+          path: cache.txt
