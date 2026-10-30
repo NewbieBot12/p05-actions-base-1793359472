@@ -1,0 +1,17 @@
+name: p05-artifact-fork
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+permissions:
+  contents: read
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create artifact
+        run: echo "P05_FORK_ARTIFACT_CONTENT" > artifact.txt
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: p05-fork-artifact
+          path: artifact.txt

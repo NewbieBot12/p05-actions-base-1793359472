@@ -1,0 +1,21 @@
+name: p05-artifact-privileged
+on:
+  workflow_run:
+    workflows: ["p05-artifact-fork"]
+    types: [completed]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact from triggering run
+        uses: actions/download-artifact@v4
+        with:
+          name: p05-fork-artifact
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+      - name: Show artifact
+        run: |
+          if [ -f artifact.txt ]; then echo "ARTIFACT_HIT"; cat artifact.txt; else echo "ARTIFACT_MISS"; fi
